@@ -22,12 +22,6 @@ bn = map (foldr (+) 0) sd
 
 
 -- Ex 4
-isSquare n =
-    sq * sq == n
-        where sq = floor $ sqrt $ (fromIntegral n::Double)
-
-squareOf n = floor(sqrt(fromIntegral n))
-
 pt :: [(Integer,Integer,Integer)]
-pt = [(a,b,c)| c <- [1..], a <- [1..c-1], let b' = (c*c) - (a*a), isSquare b', let b = squareOf b', a < b]
+pt = [(x,y,z) | z<-[1..], x<-[1..z], y<-[1..z], x^2+y^2==z^2, x<y ]
 --------------------------------------------
