@@ -17,5 +17,9 @@ test3 = TestCase $ assertEqual "Some text here"
             [1,2,5,15,52]
             (take 5 bn)
 
+test4 = TestCase $ assertEqual "Some text here"
+            [(3,4,5),(6,8,10),(5,12,13),(9,12,15)]
+            (take 4 pt)
+
 main :: IO Counts
-main = runTestTT $ TestList [test1, test2, test3]
+main = runTestTT $ TestList [test1, test2, test3, test4]
