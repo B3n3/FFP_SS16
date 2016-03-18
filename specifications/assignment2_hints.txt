@@ -1,0 +1,2 @@
+The head element of the stream ddps is 3, not 2 since the binary representation of 2 contains one 1, which is not a prime number of 1s (fixed on March 18, 2016).
+
