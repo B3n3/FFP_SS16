@@ -22,16 +22,16 @@ test4 = TestCase $ assertEqual "Goedle number (gz) wrong"
             (gz 42)
 
 test5 = TestCase $ assertEqual "Goedle number (gz) wrong"
-            402
-            (gz 400)
+            400
+            (gz 402)
 
 test6 = TestCase $ assertEqual "Goedle number (gzMT) wrong"
             144
             (gzMT 42)
 
 test7 = TestCase $ assertEqual "Goedle number (gzMT) wrong"
-            402
-            (gzMT 400)
+            400
+            (gzMT 402)
 
 test8 = TestCase $ assertEqual "Goedle number stream (gzs) wrong"
             [2,4,8,16,32,64,128,256,512,2,6,18,54,162,486,1458,4374,13122,39366,4]
