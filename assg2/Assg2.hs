@@ -62,6 +62,19 @@ f :: Integer -> Integer -> Double
 f x k = foldr (+) 0 (take (fromIntegral k + 1) terms)
     where terms = [h x i | i <- [1,3..]]
 
+fMT :: Integer -> Integer -> Double
+fMT x k = fMTList !! fromIntegral x  !! fromIntegral k
+
+-- Memo table for fMT
+fMTList :: [[Double]]
+fMTList = map (\x -> map (fMT' x) [0..]) [0..]
+
+-- Algorithm of fMT
+fMT' :: Integer -> Integer -> Double
+fMT' 0 _ = 0
+fMT' x 0 = fromIntegral x
+fMT' x k = (h x (2 * k + 1)) + (fMT x (k - 1))
+
 -- helper function for f and fMT
 h :: Integer -> Integer -> Double
 h x i = (fromIntegral x ^ i) / (fromIntegral $ fact i)
@@ -73,7 +86,6 @@ fact 1 = 1
 fact n = n * fact (n - 1)
 -- Alternative with streams: fact = 1 : zipWith (*) [1..] fact
 -- results in "ERROR - Garbage collection fails to reclaim sufficient space" for much lower factorial values than the recursive implementation
-
 
 -- Ex 5
 

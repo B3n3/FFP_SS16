@@ -73,7 +73,36 @@ test17 = TestCase $ assertEqual "3 ^ 10 should be 59049"
             59049
             (powMT 10)
 
+test18 = TestCase $ assertEqual "f 0 0 should be 0"
+            0
+            (f 0 0)
+
+test19 = TestCase $ assertEqual "f 0 100 should be 0"
+            0
+            (f 0 100)
+
+test20 = TestCase $ assertEqual "f 100 0 should be 100"
+            100
+            (f 100 0)
+
+test21 = TestCase $ assertEqual "fMT 0 0 should be 0"
+            0
+            (fMT 0 0)
+
+test22 = TestCase $ assertEqual "fMT 0 100 should be 0"
+            0
+            (fMT 0 100)
+
+test23 = TestCase $ assertEqual "fMT 100 0 should be 100"
+            100
+            (fMT 100 0)
+
+test24 = TestCase $ assertEqual "f 100 30 should equal fMT 100 30"
+            (show $ f 100 30)
+            (show $ fMT 100 30)
+
 
 main :: IO Counts
 main = runTestTT $ TestList [test1, test2, test3, test4, test5, test6, test7, test8, test9,
-            test10, test11, test12, test13, test14, test15, test16, test17]
+            test10, test11, test12, test13, test14, test15, test16, test17, test18, test19,
+            test20, test21, test22, test23, test24]
