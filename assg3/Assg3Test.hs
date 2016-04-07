@@ -10,4 +10,11 @@ test1 = TestCase $ assertEqual "Dummy"
             0
 
 main :: IO Counts
-main = runTestTT $ TestList [test1]
+main = runTestTT $ TestList [test1, testTransform]
+
+
+-- Ex 1 tests
+
+testTransform = TestCase $ assertEqual "Test transform"
+					((1, 0), 3, (7, 7))
+					$ transform ((B, Eins), 3, (H, Acht))
