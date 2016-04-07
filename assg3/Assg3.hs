@@ -25,30 +25,40 @@ springer s a z = spgTransformer . spgSelektor . spgFilter . spgGenerator . trans
 
 transform :: (StartPosition, AnzahlZuege, ZielPosition) -> (VirtualVonPosition, AnzahlZuege, VirtualNachPosition)
 transform ((sr, sl), a, (zr, zl)) =
-	let convert e = fromIntegral $ (fromEnum e) + 1
-	in ((convert sr, convert sl), a, (convert zr, convert zl))
+    let convert e = fromIntegral $ (fromEnum e) + 1
+    in ((convert sr, convert sl), a, (convert zr, convert zl))
 
 spgGenerator :: (VirtualVonPosition, AnzahlZuege, VirtualNachPosition) -> (VirtualNachPosition, [VirtualZugfolge])
 spgGenerator (_, 0, np) = (np, [[]])
 spgGenerator (vp@(vpr, vpl), a, np) = (np, moves1 ++ moves2 ++ moves3 ++ moves4 ++ moves5 ++ moves6 ++ moves7 ++ moves8)
-	where
-		moves1 = map ((vp, (vpr - 2, vpl + 1)):) $ snd $ spgGenerator ((vpr - 2, vpl + 1), a - 1, np)
-		moves2 = map ((vp, (vpr - 1, vpl + 2)):) $ snd $ spgGenerator ((vpr - 1, vpl + 2), a - 1, np)
-		moves3 = map ((vp, (vpr + 1, vpl + 2)):) $ snd $ spgGenerator ((vpr + 1, vpl + 2), a - 1, np)
-		moves4 = map ((vp, (vpr + 2, vpl + 1)):) $ snd $ spgGenerator ((vpr + 2, vpl + 1), a - 1, np)
-		moves5 = map ((vp, (vpr + 2, vpl - 1)):) $ snd $ spgGenerator ((vpr + 2, vpl - 1), a - 1, np)
-		moves6 = map ((vp, (vpr + 1, vpl - 2)):) $ snd $ spgGenerator ((vpr + 1, vpl - 2), a - 1, np)
-		moves7 = map ((vp, (vpr - 1, vpl - 2)):) $ snd $ spgGenerator ((vpr - 1, vpl - 2), a - 1, np)
-		moves8 = map ((vp, (vpr - 2, vpl - 1)):) $ snd $ spgGenerator ((vpr - 2, vpl - 1), a - 1, np)
+    where
+        moves1 = map ((vp, (vpr - 2, vpl + 1)):) $ snd $ spgGenerator ((vpr - 2, vpl + 1), a - 1, np)
+        moves2 = map ((vp, (vpr - 1, vpl + 2)):) $ snd $ spgGenerator ((vpr - 1, vpl + 2), a - 1, np)
+        moves3 = map ((vp, (vpr + 1, vpl + 2)):) $ snd $ spgGenerator ((vpr + 1, vpl + 2), a - 1, np)
+        moves4 = map ((vp, (vpr + 2, vpl + 1)):) $ snd $ spgGenerator ((vpr + 2, vpl + 1), a - 1, np)
+        moves5 = map ((vp, (vpr + 2, vpl - 1)):) $ snd $ spgGenerator ((vpr + 2, vpl - 1), a - 1, np)
+        moves6 = map ((vp, (vpr + 1, vpl - 2)):) $ snd $ spgGenerator ((vpr + 1, vpl - 2), a - 1, np)
+        moves7 = map ((vp, (vpr - 1, vpl - 2)):) $ snd $ spgGenerator ((vpr - 1, vpl - 2), a - 1, np)
+        moves8 = map ((vp, (vpr - 2, vpl - 1)):) $ snd $ spgGenerator ((vpr - 2, vpl - 1), a - 1, np)
 
-spgFilter :: (VirtualNachPosition, [VirtualZugfolge]) -> [VirtualZugfolge]
-spgFilter _ = []
+spgFilter :: (VirtualNachPosition, [VirtualZugfolge]) -> (VirtualNachPosition, [VirtualZugfolge])
+spgFilter (np, zf) = (np, filter (all validMove) zf)
+    where 
+        validMove ((vpr, vpl), (npr, npl)) = all validField [vpr, vpl, npr, npl]
+        validField f = 1 <= f && f <= 8
 
-spgSelektor :: [VirtualZugfolge] -> [VirtualZugfolge]
-spgSelektor _ = []
+spgSelektor :: (VirtualNachPosition, [VirtualZugfolge]) -> [VirtualZugfolge]
+spgSelektor (np, zf) = filter (endsWith np) zf
+    where
+        endsWith np [] = False
+        endsWith np zf = np == (snd $ last zf)
 
 spgTransformer :: [VirtualZugfolge] -> [Zugfolge]
-spgTransformer _ = []
+spgTransformer = map (map convertMove)
+    where
+        convertMove ((vpr, vpl), (npr, npl)) = ((toReihe vpr, toLinie vpl), (toReihe npr, toLinie npl))
+        toReihe f = toEnum $ (fromIntegral $ f -1) ::Reihe
+        toLinie f = toEnum $ (fromIntegral $ f -1) ::Linie
 
 
 -- Ex 2
