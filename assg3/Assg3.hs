@@ -43,7 +43,7 @@ spgGenerator (vp@(vpr, vpl), a, np) = (np, moves1 ++ moves2 ++ moves3 ++ moves4 
 
 spgFilter :: (VirtualNachPosition, [VirtualZugfolge]) -> (VirtualNachPosition, [VirtualZugfolge])
 spgFilter (np, zf) = (np, filter (all validMove) zf)
-    where 
+    where
         validMove ((vpr, vpl), (npr, npl)) = all validField [vpr, vpl, npr, npl]
         validField f = 1 <= f && f <= 8
 
@@ -62,3 +62,17 @@ spgTransformer = map (map convertMove)
 
 
 -- Ex 2
+-- deutlich schneller als binomM (!)
+binomS :: (Integer,Integer) -> Integer
+binomS (n,k) = pascal !! fromIntegral n !! fromIntegral k
+
+-- pascal triangle
+pascal = iterate (\row -> zipWith (+) ([0] ++ row) (row ++ [0])) [1]
+
+binomM :: (Integer,Integer) -> Integer
+binomM (n,k)
+	| k == 0 || n == k = 1
+	| otherwise = binomMT !! (fromIntegral n-1) !! (fromIntegral k-1) + binomMT !! (fromIntegral n-1) !! fromIntegral k
+
+binomMT = [[binomM (n,k) | k <- [0..]] | n <- [0..]]
+

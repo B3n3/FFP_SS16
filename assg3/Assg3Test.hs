@@ -12,7 +12,8 @@ main = runTestTT $ TestList [
     testSpgGenerator1, testSpgGenerator2, testSpgGenerator3,
     testSpgFilter1, testSpgFilter2,
     testSpgSelektor1, testSpgSelektor2,
-    testSpringer1, testSpringer2, testSpringer3, testSpringer4]
+    testSpringer1, testSpringer2, testSpringer3, testSpringer4,
+    test1BinomS, test1BinomM, test2BinomS, test2BinomM]
 
 
 -- Ex 1 tests
@@ -92,3 +93,17 @@ testSpringer4 = TestCase $ assertEqual "Test springer with multiple moves"
                      [((D,Vier),(E,Zwei )),((E,Zwei ),(C,Drei)),((C,Drei),(A,Zwei))],[((D,Vier),(E,Zwei )),((E,Zwei ),(C,Eins)),((C,Eins),(A,Zwei))],
                      [((D,Vier),(C,Zwei )),((C,Zwei ),(B,Vier)),((B,Vier),(A,Zwei))],[((D,Vier),(B,Drei )),((B,Drei ),(C,Eins)),((C,Eins),(A,Zwei))]]
                     $ springer (D, Vier) 3 (A, Zwei)
+
+test1BinomS - TestCase $ assertEqual "BinomS"
+                19448
+                $ binomS (17,7)
+test2BinomS - TestCase $ assertEqual "BinomS"
+                67910864
+                $ binomS (98,5)
+
+test1BinomM - TestCase $ assertEqual "BinomM"
+                19448
+                $ binomM (17,7)
+test2BinomM - TestCase $ assertEqual "BinomM"
+                67910864
+                $ binomM (98,5)
