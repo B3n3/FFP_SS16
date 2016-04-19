@@ -15,7 +15,7 @@ searchBfs succ goal x
             | goal ((toList $ Data.Sequence.take 1 s) !! 0) = (toList $ Data.Sequence.take 1 s) !! 0 : search' (Data.Sequence.drop 1 s)
             | otherwise =
                 let x = (toList $ Data.Sequence.take 1 s) !! 0
-                in search' (foldl (|>) (Data.Sequence.drop 1 s) (succ x))
+                in search' (Prelude.foldl (|>) (Data.Sequence.drop 1 s) (succ x))
 
 -----------------------------
 
@@ -29,7 +29,7 @@ searchDfs succ goal x
                 | goal (s !! 0) = s !! 0 : search' (Prelude.drop 1 s)
                 | otherwise
                     = let x = s !! 0
-                    in search' (foldr (:) (Prelude.drop 1 s) (succ x))
+                    in search' (Prelude.foldr (:) (Prelude.drop 1 s) (succ x))
 
 data Reihe = A | B | C | D | E | F | G | H deriving (Eq, Ord, Enum, Show)
 data Linie = Eins | Zwei | Drei | Vier | Fuenf | Sechs | Sieben | Acht deriving (Eq, Ord, Enum, Show)
@@ -132,8 +132,8 @@ newTable :: (Ix b) => [(b,a)] -> Table a b
 newTable l = Tbl (array (lo,hi) l)
     where
         indices = map fst l
-        lo = minimum indices
-        hi = maximum indices
+        lo = Prelude.minimum indices
+        hi = Prelude.maximum indices
 
 findTable :: (Ix b) => Table a b -> b -> a
 findTable (Tbl a) i = a ! i
