@@ -17,8 +17,84 @@ searchBfs succ goal x
                 let x = (toList $ Data.Sequence.take 1 s) !! 0
                 in search' (foldl (|>) (Data.Sequence.drop 1 s) (succ x))
 
+-----------------------------
 
--- Ex 2 binomDyn
+-- Ex 2
+
+searchDfs succ goal x
+    = (search' [x])
+        where
+            search' s
+                | Prelude.null s = []
+                | goal (s !! 0) = s !! 0 : search' (Prelude.drop 1 s)
+                | otherwise
+                    = let x = s !! 0
+                    in search' (foldr (:) (Prelude.drop 1 s) (succ x))
+
+data Reihe = A | B | C | D | E | F | G | H deriving (Eq, Ord, Enum, Show)
+data Linie = Eins | Zwei | Drei | Vier | Fuenf | Sechs | Sieben | Acht deriving (Eq, Ord, Enum, Show)
+
+type SpgNode = (StartPosition,  ZielPosition, AnzahlZuege, AktPosition, VerbrauchteZuege, Zugfolge)
+type StartPosition = (Reihe, Linie)
+type ZielPosition = (Reihe, Linie)
+type AktPosition = (Reihe, Linie)
+type VonPosition = (Reihe, Linie)
+type NachPosition = (Reihe, Linie)
+type AnzahlZuege = Int
+type VerbrauchteZuege = Int
+type Zug = (VonPosition, NachPosition)
+type Zugfolge = [Zug]
+
+type VirtualPosition = (Int, Int)
+
+getZugfolgeReversed :: SpgNode -> Zugfolge
+getZugfolgeReversed (startP,zielP,anzahlZ,aktP,verbrauchteZ, zugfolge) = Prelude.reverse zugfolge
+
+toVirtual :: AktPosition -> VirtualPosition
+toVirtual (sr, sl) =
+    let convert e = fromIntegral $ fromEnum e
+    in (convert sr, convert sl)
+
+fromVirtual :: VirtualPosition -> AktPosition
+fromVirtual (row, line) = (toEnum (row), toEnum(line))
+
+genSucc :: VirtualPosition -> [VirtualPosition]
+genSucc (row, line) = Prelude.filter spgValidPosition
+    [
+        (row - 1, line + 2),
+        (row + 1, line + 2),
+        (row + 2, line + 1),
+        (row + 2, line - 1),
+        (row + 1, line - 2),
+        (row - 1, line - 2),
+        (row - 2, line - 1),
+        (row - 2, line + 1)
+    ]
+    where spgValidPosition (row, line) = 0 <= row && row <= 7 && 0 <= line && line <= 7
+
+spgSucc :: SpgNode -> [SpgNode]
+spgSucc (startP,zielP,anzahlZ,aktP,verbrauchteZ, zugfolge)
+    | verbrauchteZ == anzahlZ       = []
+    | verbrauchteZ < anzahlZ        = map f $ map fromVirtual (genSucc $ toVirtual aktP)
+        where f newPos = (startP, zielP, anzahlZ, newPos, verbrauchteZ + 1, (aktP, newPos) : zugfolge)
+
+spgGoal :: SpgNode -> Bool
+spgGoal (startP,zielP,anzahlZ,aktP,verbrauchteZ, zugfolge)
+    | aktP == zielP     = True
+    | otherwise         = False
+
+spgBfs :: StartPosition -> ZielPosition -> AnzahlZuege -> [Zugfolge]
+spgBfs startP zielP anzahlZ = map (\x -> getZugfolgeReversed x) results
+    where results = searchBfs spgSucc spgGoal (startP, zielP, anzahlZ, startP, 0, [])
+
+spgDfs :: StartPosition -> ZielPosition -> AnzahlZuege -> [Zugfolge]
+spgDfs startP zielP anzahlZ = map (\x -> getZugfolgeReversed x) results
+    where results = searchDfs spgSucc spgGoal (startP, zielP, anzahlZ, startP, 0, [])
+
+
+-----------------------------
+
+-- Ex 3 binomDyn
 ------------------
 -- binomDyn is faster than binomM, but my implementation of binomS is still way faster :)
 -- I think this is because I exploited the correlation between the binomial coefficient and
