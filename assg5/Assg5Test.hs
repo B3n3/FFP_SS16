@@ -3,6 +3,7 @@ module Assg5Test where
 import Test.HUnit
 import Data.Monoid
 import Control.Monad
+import Array
 import Assg5
 
 
