@@ -1,6 +1,6 @@
 module Assg5 where
 
-import Array
+import Data.Array
 
 -- Ex 1
 
@@ -33,3 +33,11 @@ amas a = map fst ( filter (\(_,max) -> max == mas a) (sumsOfSection a)  )
 -----------------------------
 
 
+-- Ex 3
+
+lmas :: Array Int Int -> (Int, Int)
+lmas lst = head $ filter (\(start, end) -> end - start == maxDiff) amasArray
+    where maxDiff = maximum $ map (\x -> snd x - fst x) amasArray
+          amasArray = amas lst
+
+-----------------------------
