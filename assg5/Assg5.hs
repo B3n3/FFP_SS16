@@ -41,3 +41,33 @@ lmas lst = head $ filter (\(start, end) -> end - start == maxDiff) amasArray
           amasArray = amas lst
 
 -----------------------------
+
+-- Ex 4
+
+minIndex :: (Ix a, Show a) => Array a b -> (b -> Bool) -> a
+minIndex array check
+    | length result == 0 = error "No matching index"
+    | otherwise = head result
+        where
+            result = divideAndConquer mi_indiv mi_solve mi_divide mi_combine $ assocs array
+
+            mi_indiv lst = length lst <= 1
+
+            mi_solve [] = []
+            mi_solve ((a, b):_)
+                | check b = [a]
+                | otherwise = []
+
+            mi_divide (l@(a, _):ls) = [filter (\x -> a >  fst x) ls, 
+                                       [l],
+                                       filter (\x -> a <= fst x) ls]
+
+            mi_combine _ [l1, l2, l3] = l1 ++ l2 ++ l3
+
+divideAndConquer :: (p -> Bool) -> (p -> s) -> (p -> [p]) -> (p -> [s] -> s) -> p -> s
+divideAndConquer indiv solve divide combine initPb
+    = dAC initPb
+        where
+            dAC pb
+                | indiv pb = solve pb
+                | otherwise = combine pb (map dAC (divide pb))
