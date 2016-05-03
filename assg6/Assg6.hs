@@ -6,18 +6,13 @@ data Token = Wrong | Mult | Add | Value Integer deriving (Eq,Show)
 
 inOut :: (String -> String) -> IO Integer
 inOut f = do
-    lines <- readUntilEnd
-    sequence $ map (print . f) lines
-    return $ fromIntegral $ length lines
-
-readUntilEnd :: IO [String]
-readUntilEnd = do
     line <- getLine
     if line == "end"
-        then return []
+        then return 0
         else do
-            lines <- readUntilEnd
-            return $ line:lines
+            print $ f line
+            nLines <- inOut f
+            return $ 1 + nLines
 
 --Ex 2
 
@@ -64,3 +59,7 @@ interpret t = interpret' t []
 
 --Ex 5
 
+main :: IO ()
+main = do
+    nLines <- inOut (toString . interpret . tokenize)
+    print nLines
