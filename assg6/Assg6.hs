@@ -38,6 +38,12 @@ tokenize s@(c:r)
 
 --Ex 3
 
+toString :: [Integer] -> String
+toString [] = "Error"
+toString lst = joinToString $ map (show) $ reverse lst
+    where
+        joinToString (h:l) = h ++ foldl (\t c -> t ++ " " ++ c) "" l
+
 
 --Ex 4
 
