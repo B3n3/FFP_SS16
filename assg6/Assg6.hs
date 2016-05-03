@@ -47,6 +47,20 @@ toString lst = joinToString $ map (show) $ reverse lst
 
 --Ex 4
 
+interpret :: [Token] -> [Integer]
+interpret t = interpret' t []
+    where
+        interpret' [] stack = stack
+        interpret' (t:r) stack = case t of
+            Wrong -> []
+            Mult -> if length stack < 2
+                then []
+                else interpret' r $ ((stack !! 0) * (stack !! 1)) : drop 2 stack
+            Add -> if length stack < 2
+                then []
+                else interpret' r $ ((stack !! 0) + (stack !! 1)) : drop 2 stack
+            Value n -> interpret' r $ n : stack
+
 
 --Ex 5
 
