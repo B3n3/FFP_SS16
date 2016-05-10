@@ -29,4 +29,20 @@ occI' last first word text
         = (first+1, last) : occI' (last + length word) (last + length word) word text
     | text !! first  == word !! (length word - (last - first + 1))
         = occI' last (first-1) word text
-    | otherwise = []
+    | otherwise = occI' (last + (skip (text !! first))) (last + (skip (text !! first))) word text
+
+
+-- Pseudocode:
+--
+--function preprocess(pattern)
+--    T ← new table of 256 integers
+--    for i from 0 to 256 exclusive
+--        T[i] ← length(pattern)
+--    for i from 0 to length(pattern) - 1 exclusive
+--        T[pattern[i]] ← length(pattern) - 1 - i
+--    return T
+
+
+preprocess :: Word -> [(String, Int)]
+
+skip:: String -> Int
