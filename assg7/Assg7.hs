@@ -29,7 +29,7 @@ occI' last first word text
         = (first+1, last) : occI' (last + length word) (last + length word) word text
     | text !! first  == word !! (length word - (last - first + 1))
         = occI' last (first-1) word text
-    | otherwise = occI' (last + (skip (text !! first))) (last + (skip (text !! first))) word text
+    | otherwise = occI' (last + (skip (text !! first) word)) (last + (skip (text !! first) word)) word text
 
 
 -- Pseudocode:
@@ -43,6 +43,22 @@ occI' last first word text
 --    return T
 
 
-preprocess :: Word -> [(String, Int)]
+preprocess :: Word -> [(Char, Int)]
+preprocess w = preprocess' w 0 (length w)
 
-skip:: String -> Int
+preprocess' :: [Char] -> Int -> Int ->  [(Char, Int)]
+preprocess' [] i len = []
+preprocess' (x:xs) i len
+    | i == 0        = [(x, len-1)] ++ preprocess' xs (i+1) len
+    | i == len -1   = [(x, len)]
+    | otherwise     = [(x, len-i-1)] ++ preprocess' xs (i+1) len
+
+getSkip :: Char -> [(Char,Int)] -> Int -> Int
+getSkip _ [] len = len
+getSkip c (x:xs) len
+    | c == fst x    = snd x
+    | otherwise     = getSkip c xs len
+
+skip :: Char -> [Char] -> Int
+skip c w = getSkip c (reverse (preprocess w)) (length w)
+
