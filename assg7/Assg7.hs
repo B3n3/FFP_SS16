@@ -62,3 +62,6 @@ getSkip c (x:xs) len
 skip :: Char -> [Char] -> Int
 skip c w = getSkip c (reverse (preprocess w)) (length w)
 
+
+prop_coincide :: Text -> Word -> Bool
+prop_coincide t w = occS t w == occI t w
